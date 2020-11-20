@@ -1,6 +1,3 @@
-rm(list=ls())
-graphics.off()
-
 library(tidyverse)
 require(rstan)
 
@@ -34,13 +31,13 @@ initsList[[1]] <- list(alpha = runif(nSubject, 0.3, 0.6),
                        mu_p_alpha = runif(nGroup, -0.1, 0.1),
                        sigma_p_alpha = runif(nGroup, 0.5, 1),
                        mu_p_beta = runif(nGroup, -3, -2),
-                       sigma_p_beta = runif(nGroup, 0.4, 0.9), 
+                       sigma_p_beta = runif(nGroup, 0.4, 0.9),
                        eta_alpha = runif(nSubject, -0.2, 0.2),
                        eta_beta = runif(nSubject, -0.2, 0.2))
 
 # Bayse estimation
-stanFit <- rstan::sampling(object = smodel, 
-                           data = dataList, 
+stanFit <- rstan::sampling(object = smodel,
+                           data = dataList,
                            chains = 1,
                            pars = c('mu_p_alpha',
                                     'sigma_p_alpha',

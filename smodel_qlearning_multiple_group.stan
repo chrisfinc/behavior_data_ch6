@@ -2,12 +2,12 @@ data {
   int<lower=1> N ; // number of subjects (or sessions)
   int<lower=1> G[N] ; // group id 
   int<lower=1> nGroup ; // number of groups 
-  int<lower=0> flgCommon_alpha ; // 1: common 0:different (for population dist. of alpha)
-  int<lower=0> flgCommon_beta ; // 1: common 0:different (for population dist. of beta)
+  int<lower=0> flgCommon_alpha ; // 1: common 0: different (for population dist. of alpha)
+  int<lower=0> flgCommon_beta ; // 1: common 0: different (for population dist. of beta)
   int<lower=1> T ; // number of trials (per subject)
   int<lower=1,upper=2> c[N,T]; // choice
   real r[N,T]; // reward
-  int WBICmode; // 0:normal Bayes, 1:sampling for WBIC 
+  int WBICmode; // 0:normal Bayes, 1:sampling for WBIC
 }
 
 parameters {
@@ -57,7 +57,7 @@ model {
   }
 
   eta_alpha ~ normal(0,1);
-  eta_beta ~ normal(0,1); 
+  eta_beta ~ normal(0,1);
 
   for ( i in 1:N ) {
     // initial value set

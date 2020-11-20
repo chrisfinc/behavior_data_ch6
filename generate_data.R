@@ -1,3 +1,4 @@
+# データ生成: 詳細設定は書籍P192参照
 library(tidyverse)
 
 directory <- "~/study_programming/behavior_data_ch6/data/"

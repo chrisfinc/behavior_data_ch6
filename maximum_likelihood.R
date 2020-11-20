@@ -20,7 +20,7 @@ fit_models_SSML <- function(data, modelfunc, nParamList) {
   # ラグランジュ未定乗数法による最適化を5回実施
   for (idxrun in 1:5) {
     initparam <- runif(nParamList, 0, 1.0)
-    
+
     # https://cran.r-project.org/web/packages/Rsolnp/Rsolnp.pdf
     res <- solnp(initparam,
                  fun = func_ML,
@@ -30,7 +30,7 @@ fit_models_SSML <- function(data, modelfunc, nParamList) {
                  idxGroup = 1,
                  data = data)
     nll <- res$values[length(res$values)]
-    
+
     # 5回のうちベストの結果を記録
     if (nll < fvalmin) {
       paramest <- res$par
@@ -51,18 +51,19 @@ paramfitSSML <- function(modelfunc, data, nParamList) {
 func_qlearning <- function(param, gpmap, idxGroup = 1, data) {
   alpha <- param[gpmap[idxGroup, 1]]
   beta <- param[gpmap[idxGroup, 2]]
-  c <- data$choice
-  r <- data$reward
+  c <- data$choice # 実際の選択
+  r <- data$reward # 実際の報酬
   T <- length(c)
   pA <- numeric(T)
-  Q <- matrix(numeric(2*T), nrow=2, ncol=T) # 行動価値観数
+  Q <- matrix(numeric(2*T), nrow=2, ncol=T) # 行動価値関数
   ll <- 0 # Log likelihood
-  
+
   for (t in 1:T) {
     pA[t] <- 1/(1 + exp(-beta * (Q[1, t] - Q[2, t])))
     pA[t] <- max(min(pA[t], 0.9999), 0.0001)
+    # LLの計算にはchoice, rewardから計算できる選択確率を利用(P21)
     ll <- ll + (c[t] == 1) * log(pA[t]) +  (c[t] == 2) * log(1 - pA[t])
-    
+
     # update values 
     if (t < T) {
       Q[c[t], t+1] <- Q[c[t], t] + alpha * (r[t] - Q[c[t], t])
@@ -70,7 +71,7 @@ func_qlearning <- function(param, gpmap, idxGroup = 1, data) {
       Q[3-c[t], t+1] <- Q[3-c[t], t]
     }
   }
-  
+
   return(list(negll = -ll, Q = Q, pA = pA))
 }
 
